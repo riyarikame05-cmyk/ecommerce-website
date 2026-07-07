@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>ShopEase - Products</title>
+
+    <link rel="stylesheet" href="css/products.css">
+
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+
+        <div class="logo">
+            Shop<span>Ease</span>
+        </div>
+
+        <div class="search-box">
+            <input
+                type="text"
+                id="search"
+                placeholder="Search Products..."
+                onkeyup="searchProducts()">
+        </div>
+
+        <div class="nav-buttons">
+
+            <button onclick="window.location.href='wishlist.html'">
+                ❤️ Wishlist
+            </button>
+
+            <button onclick="window.location.href='cart.html'">
+                🛒 Cart
+            </button>
+
+            <button onclick="logout()">
+                Logout
+            </button>
+
+        </div>
+
+    </nav>
+
+    <!-- Category Section -->
+
+   <div class="category-section">
+
+    <div class="category-card" onclick="filterCategory('Laptop')">
+        <div class="icon">💻</div>
+        <p>Laptop</p>
+    </div>
+
+    <div class="category-card" onclick="filterCategory('Mobile')">
+        <div class="icon">📱</div>
+        <p>Mobile</p>
+    </div>
+
+    <div class="category-card" onclick="filterCategory('Shoes')">
+        <div class="icon">👟</div>
+        <p>Shoes</p>
+    </div>
+
+    <div class="category-card" onclick="filterCategory('Clothes')">
+        <div class="icon">👕</div>
+        <p>Clothes</p>
+    </div>
+
+    <div class="category-card" onclick="filterCategory('Speaker')">
+        <div class="icon">🔊</div>
+        <p>Speaker</p>
+    </div>
+
+    <div class="category-card" onclick="filterCategory('Watch')">
+        <div class="icon">⌚</div>
+        <p>Watch</p>
+    </div>
+
+</div>
+
+    <!-- Products -->
+
+    <div id="products" class="products-container"></div>
+
+    <script src="js/products.js"></script>
+
+</body>
+
+</html>

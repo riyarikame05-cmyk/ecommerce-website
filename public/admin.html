@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ShopEase Admin Panel</title>
+
+    <link rel="stylesheet" href="css/admin.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🛍 ShopEase Admin Dashboard</h1>
+
+    <!-- Dashboard Cards -->
+
+    <div class="stats">
+
+        <div class="box">
+            <h3>Total Products</h3>
+            <h2 id="totalProducts">0</h2>
+        </div>
+
+        <div class="box">
+            <h3>Total Users</h3>
+            <h2 id="totalUsers">0</h2>
+        </div>
+
+        <div class="box">
+            <h3>Total Orders</h3>
+            <h2 id="totalOrders">0</h2>
+        </div>
+
+        <div class="box">
+            <h3>Pending Orders</h3>
+            <h2 id="pendingOrders">0</h2>
+        </div>
+
+        <div class="box">
+            <h3>Total Revenue</h3>
+            <h2 id="totalRevenue">₹0</h2>
+        </div>
+
+    </div>
+
+    <!-- Top Buttons -->
+
+    <div class="action-buttons">
+
+        <button onclick="window.location.href='admin-orders.html'">
+            📦 Manage Orders
+        </button>
+
+        <button onclick="window.location.href='products.html'">
+            🛒 View Store
+        </button>
+
+        <button onclick="logout()">
+            🚪 Logout
+        </button>
+
+    </div>
+
+    <!-- Add Product -->
+
+    <div class="form-section">
+
+        <h2>➕ Add Product</h2>
+
+        <input
+            type="text"
+            id="name"
+            placeholder="Product Name">
+
+        <input
+            type="number"
+            id="price"
+            placeholder="Price">
+
+        <input
+            type="text"
+            id="image"
+            placeholder="Image URL">
+
+        <input
+            type="text"
+            id="category"
+            placeholder="Category">
+
+        <textarea
+            id="description"
+            placeholder="Product Description"></textarea>
+
+        <button onclick="addProduct()">
+            Add Product
+        </button>
+
+    </div>
+
+    <!-- Edit Product -->
+
+    <div class="form-section">
+
+        <h2>✏ Edit Product</h2>
+
+        <input
+            type="hidden"
+            id="productId">
+
+        <input
+            type="text"
+            id="editName"
+            placeholder="Product Name">
+
+        <input
+            type="number"
+            id="editPrice"
+            placeholder="Price">
+
+        <input
+            type="text"
+            id="editImage"
+            placeholder="Image URL">
+
+        <input
+            type="text"
+            id="editCategory"
+            placeholder="Category">
+
+        <textarea
+            id="editDescription"
+            placeholder="Description"></textarea>
+
+        <button onclick="updateProduct()">
+            Update Product
+        </button>
+
+    </div>
+
+    <!-- Product List -->
+
+    <h2 style="margin:30px 0 20px;">
+        📦 All Products
+    </h2>
+
+    <div id="products"></div>
+
+</div>
+
+<script src="js/admin.js"></script>
+
+</body>
+
+</html>

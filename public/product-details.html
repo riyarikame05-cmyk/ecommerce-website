@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Product Details</title>
+
+    <link rel="stylesheet" href="css/product-details.css">
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+    <button onclick="window.location='products.html'">
+        ← Back to Products
+    </button>
+
+</div>
+
+<div id="productDetails"></div>
+
+<div class="review-section">
+
+<h2>⭐ Customer Reviews</h2>
+
+<div class="review-box">
+
+<label>Rating</label>
+
+<select id="rating">
+
+<option value="5">⭐⭐⭐⭐⭐</option>
+<option value="4">⭐⭐⭐⭐</option>
+<option value="3">⭐⭐⭐</option>
+<option value="2">⭐⭐</option>
+<option value="1">⭐</option>
+
+</select>
+
+<textarea
+id="comment"
+placeholder="Write your review..."></textarea>
+
+<button onclick="addReview()">
+Submit Review
+</button>
+
+</div>
+
+<div id="reviews"></div>
+
+</div>
+
+<script src="js/product-details.js"></script>
+<script src="js/review.js"></script>
+
+</body>
+</html>

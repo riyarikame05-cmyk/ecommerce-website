@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Admin Orders</title>
+
+    <link rel="stylesheet" href="css/admin.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>📦 All Orders</h1>
+
+    <button onclick="window.location='admin.html'">
+        ← Back to Admin
+    </button>
+
+    <br><br>
+
+    <div id="orders"></div>
+
+</div>
+
+<script>
+const user = JSON.parse(localStorage.getItem("user"));
+
+if (!user || user.role !== "admin") {
+
+    alert("Access Denied!");
+
+    window.location.href = "products.html";
+
+}
+</script>
+<script src="js/admin-orders.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+</head>
+<body>
+
+<h1>Welcome to ShopEase🎉</h1>
+
+<p id="username"></p>
+
+<script>
+
+const user = JSON.parse(localStorage.getItem("user"));
+
+if(!user){
+
+    window.location.href="login.html";
+
+}
+
+document.getElementById("username").innerHTML =
+"Welcome " + user.name;
+
+</script>
+
+</body>
+</html>

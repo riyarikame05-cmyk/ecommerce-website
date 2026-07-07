@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ShopEase | Checkout</title>
+
+    <link rel="stylesheet" href="css/checkout.css">
+
+</head>
+
+<body>
+
+<div class="checkout-container">
+
+    <div class="checkout-card">
+
+        <h1>🚚 Shipping Address</h1>
+
+        <p class="subtitle">
+            Please enter your delivery details
+        </p>
+
+        <div class="row">
+
+            <div class="input-box">
+
+                <label>Full Name</label>
+
+                <input
+                    type="text"
+                    id="fullName"
+                    placeholder="Enter Full Name">
+
+            </div>
+
+            <div class="input-box">
+
+                <label>Mobile Number</label>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    placeholder="Enter Mobile Number">
+
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="input-box">
+
+                <label>Pincode</label>
+
+                <input
+                    type="text"
+                    id="pincode"
+                    placeholder="400001">
+
+            </div>
+
+            <div class="input-box">
+
+                <label>City</label>
+
+                <input
+                    type="text"
+                    id="city"
+                    placeholder="Mumbai">
+
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="input-box">
+
+                <label>State</label>
+
+                <input
+                    type="text"
+                    id="state"
+                    placeholder="Maharashtra">
+
+            </div>
+
+            <div class="input-box">
+
+                <label>Country</label>
+
+                <input
+                    type="text"
+                    id="country"
+                    value="India">
+
+            </div>
+
+        </div>
+
+        <div class="input-box">
+
+            <label>Complete Address</label>
+
+            <textarea
+                id="address"
+                rows="4"
+                placeholder="House No, Street, Area"></textarea>
+
+        </div>
+
+        <div class="input-box">
+
+            <label>Payment Method</label>
+
+            <select id="paymentMethod">
+
+                <option value="Cash On Delivery">
+                    Cash On Delivery
+                </option>
+
+                <option value="Razorpay">
+                    Razorpay
+                </option>
+
+            </select>
+
+        </div>
+
+        <button onclick="placeOrder()">
+            Proceed To Payment →
+        </button>
+
+    </div>
+
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script src="js/checkout.js"></script>
+
+</body>
+
+</html>
