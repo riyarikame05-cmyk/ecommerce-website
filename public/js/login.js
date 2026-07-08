@@ -1,4 +1,7 @@
-const API = "http://localhost:5000/api/auth";
+const API =
+window.location.hostname === "localhost"
+? "http://localhost:5000/api/auth"
+: "/api/auth";
 
 const form = document.getElementById("loginForm");
 
