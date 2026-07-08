@@ -24,7 +24,8 @@ app.use("/api/payment", require("./routes/paymentRoutes"));
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "register.html"));
 });
-
+console.log("Loaded MONGO_URI:");
+console.log(process.env.MONGO_URI);
 mongoose
 .connect(process.env.MONGO_URI)
 .then(() => {
