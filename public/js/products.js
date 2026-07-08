@@ -1,4 +1,4 @@
-const API = "http://localhost:5000/api/products";
+const API = "/api/products";
 
 const token = localStorage.getItem("token");
 
@@ -170,7 +170,7 @@ async function addToCart(productId){
 
     try{
 
-        const response=await fetch("http://localhost:5000/api/cart/add",{
+        const response=await fetch("/api/cart/add", {
 
             method:"POST",
 
@@ -205,9 +205,7 @@ async function addWishlist(productId){
 
     try{
 
-        const response=await fetch(
-            "http://localhost:5000/api/wishlist",
-            {
+        const response=await fetch("/api/wishlist", {
 
                 method:"POST",
 

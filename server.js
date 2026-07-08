@@ -24,19 +24,21 @@ app.use("/api/payment", require("./routes/paymentRoutes"));
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "register.html"));
 });
-console.log("Loaded MONGO_URI:");
-console.log(process.env.MONGO_URI);
 mongoose
 .connect(process.env.MONGO_URI)
-.then(() => {
+.then(async () => {
+
     console.log("MongoDB Connected ✅");
+
+    const Product = require("./models/Product");
+
+    const count = await Product.countDocuments();
+
+    console.log("Total Products:", count);
+
+    const first = await Product.findOne();
+
+    console.log(first);
+
 })
-.catch((err) => {
-    console.log("Mongo Error ❌", err);
-});
-
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT} 🚀`);
-});
+.catch(err => console.log(err));
