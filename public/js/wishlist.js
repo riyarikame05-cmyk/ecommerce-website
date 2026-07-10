@@ -1,17 +1,28 @@
+const API = "/api/wishlist";
+
 const token = localStorage.getItem("token");
+
+if (!token) {
+    window.location.href = "login.html";
+}
+
+// ================= LOAD WISHLIST =================
 
 async function loadWishlist() {
 
     try {
 
-        const response = await fetch(
-            "http://localhost:5000/api/wishlist",
-            {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
+        const response = await fetch(API, {
+
+            headers: {
+                Authorization: `Bearer ${token}`
             }
-        );
+
+        });
+
+        if (!response.ok) {
+            throw new Error("Unable to load wishlist");
+        }
 
         const wishlist = await response.json();
 
@@ -19,9 +30,25 @@ async function loadWishlist() {
 
         container.innerHTML = "";
 
-        if (wishlist.length === 0) {
+        if (!wishlist || wishlist.length === 0) {
 
-            container.innerHTML = "<h2>Your Wishlist is Empty ❤️</h2>";
+            container.innerHTML = `
+
+                <div class="empty">
+
+                    <h2>❤️ Your Wishlist is Empty</h2>
+
+                    <p>Add your favourite products.</p>
+
+                    <button onclick="window.location.href='products.html'">
+
+                        Continue Shopping
+
+                    </button>
+
+                </div>
+
+            `;
 
             return;
 
@@ -33,60 +60,72 @@ async function loadWishlist() {
 
             container.innerHTML += `
 
-            <div class="card">
+                <div class="card">
 
-                <img src="${product.image}" class="product-image">
+                    <img
+                        src="${product.image}"
+                        class="product-image"
+                        alt="${product.name}">
 
-                <div class="card-content">
+                    <div class="card-content">
 
-                    <h3>${product.name}</h3>
+                        <h3>${product.name}</h3>
 
-                    <p>${product.description}</p>
+                        <p>${product.description}</p>
 
-                    <h2>₹${product.price}</h2>
+                        <h2>₹${product.price}</h2>
 
-                    <button onclick="removeWishlist('${item._id}')">
-                        Remove
-                    </button>
+                        <button onclick="window.location.href='product-details.html?id=${product._id}'">
 
-                    <button onclick="window.location.href='product-details.html?id=${product._id}'">
-                        View Product
-                    </button>
+                            View Product
+
+                        </button>
+
+                        <button
+                            class="remove-btn"
+                            onclick="removeWishlist('${item._id}')">
+
+                            🗑 Remove
+
+                        </button>
+
+                    </div>
 
                 </div>
-
-            </div>
 
             `;
 
         });
 
-    } catch (err) {
+    }
+
+    catch (err) {
 
         console.log(err);
+
+        alert("Unable to load wishlist.");
 
     }
 
 }
 
+// ================= REMOVE FROM WISHLIST =================
+
 async function removeWishlist(id) {
 
-    if (!confirm("Remove this item from wishlist?")) {
-        return;
-    }
+    if (!confirm("Remove this product from wishlist?")) return;
 
     try {
 
-        const response = await fetch(
-            `http://localhost:5000/api/wishlist/${id}`,
-            {
-                method: "DELETE",
+        const response = await fetch(`${API}/${id}`, {
 
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
+            method: "DELETE",
+
+            headers: {
+                Authorization: `Bearer ${token}`
             }
-        );
+
+        });
 
         const data = await response.json();
 
@@ -94,12 +133,18 @@ async function removeWishlist(id) {
 
         loadWishlist();
 
-    } catch (err) {
+    }
+
+    catch (err) {
 
         console.log(err);
+
+        alert("Unable to remove wishlist item.");
 
     }
 
 }
+
+// ================= START =================
 
 loadWishlist();

@@ -1,7 +1,4 @@
-const API =
-window.location.hostname === "localhost"
-? "http://localhost:5000/api/auth"
-: "/api/auth";
+const API = "/api/auth";
 
 const form = document.getElementById("loginForm");
 
@@ -19,7 +16,7 @@ form.addEventListener("submit", async (e) => {
 
     try {
 
-        const response = await fetch(API + "/login", {
+        const response = await fetch(`${API}/login`, {
 
             method: "POST",
 
@@ -36,18 +33,20 @@ form.addEventListener("submit", async (e) => {
 
         const result = await response.json();
 
-        console.log(result);
-
         if (!response.ok) {
-            alert(result.message);
+            alert(result.message || "Login Failed");
             return;
         }
+
+        // Save Login
 
         localStorage.setItem("token", result.token);
 
         localStorage.setItem("user", JSON.stringify(result.user));
 
         alert("Login Successful ✅");
+
+        // Redirect
 
         if (result.user.role === "admin") {
 
@@ -59,7 +58,9 @@ form.addEventListener("submit", async (e) => {
 
         }
 
-    } catch (err) {
+    }
+
+    catch (err) {
 
         console.log(err);
 

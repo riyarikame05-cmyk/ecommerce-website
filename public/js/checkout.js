@@ -7,74 +7,97 @@ if (!token) {
 async function placeOrder() {
 
     const fullName = document.getElementById("fullName").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const pincode = document.getElementById("pincode").value.trim();
+    const city = document.getElementById("city").value.trim();
+    const state = document.getElementById("state").value.trim();
+    const country = document.getElementById("country").value.trim();
+    const addressLine = document.getElementById("address").value.trim();
 
-const phone = document.getElementById("phone").value.trim();
-
-const pincode = document.getElementById("pincode").value.trim();
-
-const city = document.getElementById("city").value.trim();
-
-const state = document.getElementById("state").value.trim();
-
-const country = document.getElementById("country").value.trim();
-
-const address = `
-${fullName}
-${phone}
-${document.getElementById("address").value.trim()}
-${city}, ${state} - ${pincode}
-${country}
-`;
     const paymentMethod = document.getElementById("paymentMethod").value;
 
-    if (!address) {
-        alert("Please enter shipping address.");
+    if (
+        !fullName ||
+        !phone ||
+        !addressLine ||
+        !city ||
+        !state ||
+        !country ||
+        !pincode
+    ) {
+        alert("Please fill all address details.");
         return;
     }
 
-    // ================= CASH ON DELIVERY =================
+    const address = `
+${fullName}
+${phone}
+${addressLine}
+${city}, ${state} - ${pincode}
+${country}
+`;
+
+    // ==========================
+    // CASH ON DELIVERY
+    // ==========================
 
     if (paymentMethod === "Cash On Delivery") {
 
-        const response = await fetch("http://localhost:5000/api/orders", {
+        try {
 
-            method: "POST",
+            const response = await fetch("/api/orders", {
 
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            },
+                method: "POST",
 
-            body: JSON.stringify({
-                address,
-                paymentMethod
-            })
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
 
-        });
+                body: JSON.stringify({
+                    address,
+                    paymentMethod
+                })
 
-        const data = await response.json();
+            });
 
-        alert(data.message);
+            const data = await response.json();
 
-        if (response.ok) {
-            window.location.href = "orders.html";
+            alert(data.message);
+
+            if (response.ok) {
+                window.location.href = "orders.html";
+            }
+
+        } catch (err) {
+
+            console.log(err);
+            alert("Unable to place order.");
+
         }
 
         return;
     }
 
-    // ================= RAZORPAY =================
+    // ==========================
+    // ONLINE PAYMENT
+    // ==========================
 
     const amount = Number(localStorage.getItem("cartTotal"));
 
     if (!amount || amount <= 0) {
+
         alert("Cart is empty.");
         return;
+
     }
 
-    const orderResponse = await fetch(
-        "http://localhost:5000/api/payment/create-order",
-        {
+    try {
+
+        // Create Razorpay Order
+
+        const orderResponse = await fetch("/api/payment/create-order", {
+
             method: "POST",
 
             headers: {
@@ -85,34 +108,28 @@ ${country}
             body: JSON.stringify({
                 amount
             })
-        }
-    );
 
-    const order = await orderResponse.json();
+        });
 
-    console.log("Order Response:", order);
+        const order = await orderResponse.json();
 
-    const options = {
+        const options = {
 
-        key: "rzp_test_T9pp9pxS4oH9Y5",
+            key: "rzp_test_T9pp9pxS4oH9Y5",
 
-        amount: order.amount,
+            amount: order.amount,
 
-        currency: order.currency,
+            currency: order.currency,
 
-        order_id: order.id,
+            order_id: order.id,
 
-        name: "ShopEase",
+            name: "ShopEase",
 
-        description: "Product Payment",
+            description: "Product Payment",
 
-        handler: async function (response) {
+            handler: async function () {
 
-            console.log("Payment Success", response);
-
-            const saveOrder = await fetch(
-                "http://localhost:5000/api/orders",
-                {
+                const saveOrder = await fetch("/api/orders", {
 
                     method: "POST",
 
@@ -126,27 +143,32 @@ ${country}
                         paymentMethod
                     })
 
-                }
-            );
+                });
 
-            const data = await saveOrder.json();
+                const data = await saveOrder.json();
 
-            alert("Payment Successful ✅");
+                alert(data.message);
 
-            window.location.href = "orders.html";
+                window.location.href = "orders.html";
 
-        },
+            },
 
-        theme: {
-            color: "#3399cc"
-        }
+            theme: {
+                color: "#3399cc"
+            }
 
-    };
+        };
 
-    console.log(options);
+        const rzp = new Razorpay(options);
 
-    const rzp = new Razorpay(options);
+        rzp.open();
 
-    rzp.open();
+    } catch (err) {
+
+        console.log(err);
+
+        alert("Payment Failed");
+
+    }
 
 }

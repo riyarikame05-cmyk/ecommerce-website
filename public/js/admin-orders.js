@@ -1,6 +1,17 @@
-const API = "http://localhost:5000/api/orders";
+const API = "/api/orders";
 
 const token = localStorage.getItem("token");
+const user = JSON.parse(localStorage.getItem("user"));
+
+if (!token || !user || user.role !== "admin") {
+
+    alert("Access Denied!");
+
+    window.location.href = "login.html";
+
+}
+
+// ================= LOAD ORDERS =================
 
 async function loadOrders() {
 
@@ -14,11 +25,29 @@ async function loadOrders() {
 
         });
 
+        if (!response.ok) {
+
+            throw new Error("Unable to load orders");
+
+        }
+
         const orders = await response.json();
 
         const container = document.getElementById("orders");
 
         container.innerHTML = "";
+
+        if (!orders.length) {
+
+            container.innerHTML = `
+                <h2 style="text-align:center;margin-top:40px;">
+                    No Orders Found
+                </h2>
+            `;
+
+            return;
+
+        }
 
         orders.forEach(order => {
 
@@ -38,13 +67,13 @@ async function loadOrders() {
 
                 <select id="${order._id}">
 
-                    <option ${order.status=="Pending"?"selected":""}>Pending</option>
+                    <option value="Pending" ${order.status==="Pending"?"selected":""}>Pending</option>
 
-                    <option ${order.status=="Packed"?"selected":""}>Packed</option>
+                    <option value="Packed" ${order.status==="Packed"?"selected":""}>Packed</option>
 
-                    <option ${order.status=="Shipped"?"selected":""}>Shipped</option>
+                    <option value="Shipped" ${order.status==="Shipped"?"selected":""}>Shipped</option>
 
-                    <option ${order.status=="Delivered"?"selected":""}>Delivered</option>
+                    <option value="Delivered" ${order.status==="Delivered"?"selected":""}>Delivered</option>
 
                 </select>
 
@@ -64,7 +93,9 @@ async function loadOrders() {
 
         });
 
-    } catch(err){
+    }
+
+    catch (err) {
 
         console.log(err);
 
@@ -72,35 +103,47 @@ async function loadOrders() {
 
 }
 
-async function updateStatus(id){
+// ================= UPDATE STATUS =================
+
+async function updateStatus(id) {
 
     const status = document.getElementById(id).value;
 
-    const response = await fetch(`${API}/${id}`,{
+    try {
 
-        method:"PUT",
+        const response = await fetch(`${API}/${id}`, {
 
-        headers:{
+            method: "PUT",
 
-            "Content-Type":"application/json",
+            headers: {
 
-            Authorization:`Bearer ${token}`
+                "Content-Type": "application/json",
 
-        },
+                Authorization: `Bearer ${token}`
 
-        body:JSON.stringify({
+            },
 
-            status
+            body: JSON.stringify({
 
-        })
+                status
 
-    });
+            })
 
-    const data = await response.json();
+        });
 
-    alert(data.message);
+        const data = await response.json();
 
-    loadOrders();
+        alert(data.message);
+
+        loadOrders();
+
+    }
+
+    catch (err) {
+
+        console.log(err);
+
+    }
 
 }
 

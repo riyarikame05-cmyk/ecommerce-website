@@ -1,3 +1,5 @@
+const API = "/api/cart";
+
 const token = localStorage.getItem("token");
 
 if (!token) {
@@ -10,11 +12,15 @@ async function loadCart() {
 
     try {
 
-        const response = await fetch("http://localhost:5000/api/cart", {
+        const response = await fetch(API, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
+
+        if (!response.ok) {
+            throw new Error("Unable to load cart");
+        }
 
         const cart = await response.json();
 
@@ -24,7 +30,7 @@ async function loadCart() {
 
         // Empty Cart
 
-        if (cart.length === 0) {
+        if (!cart || cart.length === 0) {
 
             list.innerHTML = `
                 <div class="empty-cart">
@@ -55,47 +61,60 @@ async function loadCart() {
 
             list.innerHTML += `
 
-            <div class="card">
+                <div class="card">
 
-                <img src="${item.product.image}" class="product-image">
+                    <img
+                        src="${item.product.image}"
+                        class="product-image">
 
-                <div class="details">
+                    <div class="details">
 
-                    <h3>${item.product.name}</h3>
+                        <h3>${item.product.name}</h3>
 
-                    <p>${item.product.description}</p>
+                        <p>${item.product.description}</p>
 
-                    <h2>₹${item.product.price}</h2>
+                        <h2>₹${item.product.price}</h2>
 
-                    <div class="quantity">
+                        <div class="quantity">
 
-                        <button onclick="decreaseQuantity('${item._id}')">−</button>
+                            <button onclick="decreaseQuantity('${item._id}')">
+                                −
+                            </button>
 
-                        <span class="qty">${item.quantity}</span>
+                            <span class="qty">
+                                ${item.quantity}
+                            </span>
 
-                        <button onclick="increaseQuantity('${item._id}')">+</button>
+                            <button onclick="increaseQuantity('${item._id}')">
+                                +
+                            </button>
+
+                        </div>
+
+                        <button
+                            class="remove-btn"
+                            onclick="removeItem('${item._id}')">
+
+                            🗑 Remove
+
+                        </button>
 
                     </div>
 
-                    <button class="remove-btn" onclick="removeItem('${item._id}')">
-                        🗑 Remove
-                    </button>
-
                 </div>
-
-            </div>
 
             `;
 
         });
 
-        document.getElementById("total").innerHTML = `Total : ₹${total}`;
+        document.getElementById("total").innerHTML =
+            `Total : ₹${total}`;
 
         localStorage.setItem("cartTotal", total);
 
     } catch (err) {
 
-        console.log(err);
+        console.error(err);
 
         alert("Unable to load cart.");
 
@@ -103,13 +122,13 @@ async function loadCart() {
 
 }
 
-// ================= INCREASE =================
+// ================= INCREASE QUANTITY =================
 
 async function increaseQuantity(id) {
 
     try {
 
-        const response = await fetch(`http://localhost:5000/api/cart/increase/${id}`, {
+        const response = await fetch(`/api/cart/increase/${id}`, {
 
             method: "PUT",
 
@@ -120,9 +139,7 @@ async function increaseQuantity(id) {
         });
 
         if (response.ok) {
-
             loadCart();
-
         }
 
     } catch (err) {
@@ -133,13 +150,13 @@ async function increaseQuantity(id) {
 
 }
 
-// ================= DECREASE =================
+// ================= DECREASE QUANTITY =================
 
 async function decreaseQuantity(id) {
 
     try {
 
-        const response = await fetch(`http://localhost:5000/api/cart/decrease/${id}`, {
+        const response = await fetch(`/api/cart/decrease/${id}`, {
 
             method: "PUT",
 
@@ -150,9 +167,7 @@ async function decreaseQuantity(id) {
         });
 
         if (response.ok) {
-
             loadCart();
-
         }
 
     } catch (err) {
@@ -163,7 +178,7 @@ async function decreaseQuantity(id) {
 
 }
 
-// ================= REMOVE =================
+// ================= REMOVE ITEM =================
 
 async function removeItem(id) {
 
@@ -171,7 +186,7 @@ async function removeItem(id) {
 
     try {
 
-        const response = await fetch(`http://localhost:5000/api/cart/remove/${id}`, {
+        const response = await fetch(`/api/cart/remove/${id}`, {
 
             method: "DELETE",
 
@@ -196,5 +211,15 @@ async function removeItem(id) {
     }
 
 }
+
+// ================= CHECKOUT =================
+
+function checkout() {
+
+    window.location.href = "checkout.html";
+
+}
+
+// ================= START =================
 
 loadCart();

@@ -1,67 +1,69 @@
-const form =
-document.getElementById(
-"registerForm"
-);
+const API = "/api/auth";
 
-form.addEventListener(
-"submit",
+const form = document.getElementById("registerForm");
 
-async(e)=>{
+form.addEventListener("submit", async (e) => {
 
-e.preventDefault();
+    e.preventDefault();
 
-const data = {
+    const name = document.getElementById("name").value.trim();
 
-name:
+    const email = document.getElementById("email").value.trim();
 
-document.getElementById(
-"name"
-).value,
+    const password = document.getElementById("password").value.trim();
 
-email:
+    if (!name || !email || !password) {
 
-document.getElementById(
-"email"
-).value,
+        alert("Please fill all fields.");
 
-password:
+        return;
 
-document.getElementById(
-"password"
-).value
+    }
 
-};
+    try {
 
-const response = await fetch(
+        const response = await fetch(`${API}/register`, {
 
-"http://localhost:5000/api/auth/register",
+            method: "POST",
 
-{
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-method:"POST",
+            body: JSON.stringify({
 
-headers:{
+                name,
 
-"Content-Type":
+                email,
 
-"application/json"
+                password
 
-},
+            })
 
-body:
+        });
 
-JSON.stringify(data)
+        const result = await response.json();
 
-}
+        if (!response.ok) {
 
-);
+            alert(result.message || "Registration Failed");
 
-const result =
-await response.json();
+            return;
 
-alert(result.message);
+        }
 
-window.location.href =
-"login.html";
+        alert("Registration Successful ✅");
+
+        window.location.href = "login.html";
+
+    }
+
+    catch (err) {
+
+        console.log(err);
+
+        alert("Server Error");
+
+    }
 
 });

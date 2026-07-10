@@ -1,16 +1,27 @@
 const token = localStorage.getItem("token");
 
+if (!token) {
+    window.location.href = "login.html";
+}
+
 const params = new URLSearchParams(window.location.search);
 const productId = params.get("id");
 
+// Make available for reviews.js
 window.token = token;
 window.productId = productId;
+
+// ================= LOAD PRODUCT =================
 
 async function loadProduct() {
 
     try {
 
-        const response = await fetch("http://localhost:5000/api/products");
+        const response = await fetch("/api/products");
+
+        if (!response.ok) {
+            throw new Error("Unable to fetch products");
+        }
 
         const products = await response.json();
 
@@ -25,6 +36,7 @@ async function loadProduct() {
             `;
 
             return;
+
         }
 
         document.getElementById("productDetails").innerHTML = `
@@ -33,7 +45,10 @@ async function loadProduct() {
 
             <div class="left">
 
-                <img src="${product.image}" class="big-image">
+                <img
+                    src="${product.image}"
+                    class="big-image"
+                    alt="${product.name}">
 
             </div>
 
@@ -46,7 +61,7 @@ async function loadProduct() {
                 <h1>${product.name}</h1>
 
                 <p class="rating">
-                    ⭐ ${product.averageRating || 0}
+                    ⭐ ${product.averageRating || 4.5}
                     (${product.totalReviews || 0}
                     ${product.totalReviews == 1 ? "Review" : "Reviews"})
                 </p>
@@ -61,14 +76,16 @@ async function loadProduct() {
 
                 <div class="buttons">
 
-                    <button class="cart-btn"
+                    <button
+                        class="cart-btn"
                         onclick="addToCart('${product._id}')">
 
                         🛒 Add To Cart
 
                     </button>
 
-                    <button class="wishlist-btn"
+                    <button
+                        class="wishlist-btn"
                         onclick="addWishlist('${product._id}')">
 
                         ❤️ Wishlist
@@ -89,6 +106,12 @@ async function loadProduct() {
 
         console.log(err);
 
+        document.getElementById("productDetails").innerHTML = `
+            <h2 style="text-align:center;color:red;">
+                Failed to Load Product
+            </h2>
+        `;
+
     }
 
 }
@@ -99,28 +122,25 @@ async function addToCart(productId) {
 
     try {
 
-        const response = await fetch(
-            "http://localhost:5000/api/cart/add",
-            {
+        const response = await fetch("/api/cart/add", {
 
-                method: "POST",
+            method: "POST",
 
-                headers: {
+            headers: {
 
-                    "Content-Type": "application/json",
+                "Content-Type": "application/json",
 
-                    Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token}`
 
-                },
+            },
 
-                body: JSON.stringify({
+            body: JSON.stringify({
 
-                    productId
+                productId
 
-                })
+            })
 
-            }
-        );
+        });
 
         const data = await response.json();
 
@@ -131,6 +151,8 @@ async function addToCart(productId) {
     catch (err) {
 
         console.log(err);
+
+        alert("Unable to add product.");
 
     }
 
@@ -142,28 +164,25 @@ async function addWishlist(productId) {
 
     try {
 
-        const response = await fetch(
-            "http://localhost:5000/api/wishlist",
-            {
+        const response = await fetch("/api/wishlist", {
 
-                method: "POST",
+            method: "POST",
 
-                headers: {
+            headers: {
 
-                    "Content-Type": "application/json",
+                "Content-Type": "application/json",
 
-                    Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token}`
 
-                },
+            },
 
-                body: JSON.stringify({
+            body: JSON.stringify({
 
-                    productId
+                productId
 
-                })
+            })
 
-            }
-        );
+        });
 
         const data = await response.json();
 
@@ -175,8 +194,12 @@ async function addWishlist(productId) {
 
         console.log(err);
 
+        alert("Unable to add wishlist.");
+
     }
 
 }
+
+// ================= START =================
 
 loadProduct();

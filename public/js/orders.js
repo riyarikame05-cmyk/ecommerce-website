@@ -1,14 +1,18 @@
+const API = "/api/orders";
+
 const token = localStorage.getItem("token");
 
 if (!token) {
     window.location.href = "login.html";
 }
 
+// ================= LOAD ORDERS =================
+
 async function loadOrders() {
 
     try {
 
-        const response = await fetch("http://localhost:5000/api/orders", {
+        const response = await fetch(API, {
 
             headers: {
                 Authorization: `Bearer ${token}`
@@ -16,29 +20,33 @@ async function loadOrders() {
 
         });
 
+        if (!response.ok) {
+            throw new Error("Unable to load orders");
+        }
+
         const orders = await response.json();
 
         const container = document.getElementById("orders");
 
         container.innerHTML = "";
 
-        if (orders.length === 0) {
+        if (!orders || orders.length === 0) {
 
             container.innerHTML = `
 
-            <div class="empty">
+                <div class="empty">
 
-                <h2>📦 No Orders Yet</h2>
+                    <h2>📦 No Orders Yet</h2>
 
-                <p>You haven't placed any order.</p>
+                    <p>You haven't placed any order.</p>
 
-                <button onclick="window.location.href='products.html'">
+                    <button onclick="window.location.href='products.html'">
 
-                    Shop Now
+                        Shop Now
 
-                </button>
+                    </button>
 
-            </div>
+                </div>
 
             `;
 
@@ -54,21 +62,21 @@ async function loadOrders() {
 
                 productsHTML += `
 
-                <div class="product">
+                    <div class="product">
 
-                    <img src="${item.product.image}">
+                        <img src="${item.product.image}">
 
-                    <div class="product-details">
+                        <div class="product-details">
 
-                        <h3>${item.product.name}</h3>
+                            <h3>${item.product.name}</h3>
 
-                        <p>₹${item.product.price}</p>
+                            <p>₹${item.product.price}</p>
 
-                        <p>Quantity : ${item.quantity}</p>
+                            <p>Quantity : ${item.quantity}</p>
+
+                        </div>
 
                     </div>
-
-                </div>
 
                 `;
 
@@ -76,41 +84,40 @@ async function loadOrders() {
 
             container.innerHTML += `
 
-            <div class="order-card">
+                <div class="order-card">
 
-                <div class="order-header">
+                    <div class="order-header">
 
-                    <div class="order-info">
+                        <div class="order-info">
 
-                        <p><b>Order ID:</b> ${order._id}</p>
+                            <p><b>Order ID:</b> ${order._id}</p>
 
-                        <p><b>Total:</b> ₹${order.total}</p>
+                            <p><b>Total:</b> ₹${order.total}</p>
 
-                        <p><b>Payment:</b> ${order.paymentMethod}</p>
+                            <p><b>Payment:</b> ${order.paymentMethod}</p>
 
-                        <p><b>Address:</b> ${order.address}</p>
+                            <p><b>Address:</b> ${order.address}</p>
 
-                        <p><b>Ordered On:</b>
+                            <p><b>Date:</b>
+                            ${new Date(order.createdAt).toLocaleDateString()}</p>
 
-                        ${new Date(order.createdAt).toLocaleDateString()}</p>
+                        </div>
+
+                        <div>
+
+                            <span class="status ${order.status.toLowerCase()}">
+
+                                ${order.status}
+
+                            </span>
+
+                        </div>
 
                     </div>
 
-                    <div>
-
-                        <span class="status ${order.status.toLowerCase()}">
-
-                            ${order.status}
-
-                        </span>
-
-                    </div>
+                    ${productsHTML}
 
                 </div>
-
-                ${productsHTML}
-
-            </div>
 
             `;
 
@@ -118,9 +125,11 @@ async function loadOrders() {
 
     }
 
-    catch(err){
+    catch (err) {
 
         console.log(err);
+
+        alert("Unable to load orders.");
 
     }
 

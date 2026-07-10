@@ -1,47 +1,75 @@
+const token = localStorage.getItem("token");
+const productId = new URLSearchParams(window.location.search).get("id");
+
+// ================= LOAD REVIEWS =================
+
 async function loadReviews() {
 
-    const response = await fetch(
-        `http://localhost:5000/api/reviews/${window.productId}`
-    );
+    try {
 
-    const reviews = await response.json();
+        const response = await fetch(`/api/reviews/${productId}`);
 
-    const container = document.getElementById("reviews");
+        const reviews = await response.json();
 
-    container.innerHTML = "";
+        const container = document.getElementById("reviews");
 
-    if (!reviews.length) {
-        container.innerHTML = "<p>No reviews yet.</p>";
-        return;
+        container.innerHTML = "";
+
+        if (!reviews || reviews.length === 0) {
+
+            container.innerHTML = `
+                <p>No reviews yet.</p>
+            `;
+
+            return;
+
+        }
+
+        reviews.forEach(review => {
+
+            container.innerHTML += `
+
+                <div class="card">
+
+                    <h3>${review.user.name}</h3>
+
+                    <p>⭐ ${review.rating}/5</p>
+
+                    <p>${review.comment}</p>
+
+                </div>
+
+            `;
+
+        });
+
+    } catch (err) {
+
+        console.log(err);
+
     }
 
-    reviews.forEach(review => {
-
-        container.innerHTML += `
-            <div class="card">
-                <h3>${review.user.name}</h3>
-                <p>⭐ ${review.rating}/5</p>
-                <p>${review.comment}</p>
-            </div>
-        `;
-
-    });
-
 }
+
+// ================= ADD REVIEW =================
 
 async function addReview() {
 
     const rating = document.getElementById("rating").value;
+
     const comment = document.getElementById("comment").value.trim();
 
     if (!comment) {
+
         alert("Please write a review.");
+
         return;
+
     }
 
-    const response = await fetch(
-        "http://localhost:5000/api/reviews",
-        {
+    try {
+
+        const response = await fetch("/api/reviews", {
 
             method: "POST",
 
@@ -49,28 +77,36 @@ async function addReview() {
 
                 "Content-Type": "application/json",
 
-                "Authorization": `Bearer ${window.token}`
+                "Authorization": `Bearer ${token}`
 
             },
 
             body: JSON.stringify({
 
-                productId: window.productId,
+                productId,
+
                 rating,
+
                 comment
 
             })
 
-        }
-    );
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    alert(data.message);
+        alert(data.message);
 
-    document.getElementById("comment").value = "";
+        document.getElementById("comment").value = "";
 
-    loadReviews();
+        loadReviews();
+
+    } catch (err) {
+
+        console.log(err);
+
+    }
+
 }
 
 window.addReview = addReview;
