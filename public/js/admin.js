@@ -14,8 +14,7 @@ if (currentUser.role !== "admin") {
     alert("Access Denied! Admin Only.");
     window.location.href = "dashboard.html";
 }
-
-// ================= DASHBOARD =================
+//Load Dashboard//
 
 async function loadDashboard() {
 
@@ -29,13 +28,26 @@ async function loadDashboard() {
 
         const data = await response.json();
 
-        document.getElementById("totalProducts").innerText = data.products;
-        document.getElementById("totalUsers").innerText = data.users;
-        document.getElementById("totalOrders").innerText = data.orders;
-        document.getElementById("pendingOrders").innerText = data.pendingOrders;
-        document.getElementById("totalRevenue").innerText = "₹" + data.revenue;
+        console.log("Dashboard Data:", data);
 
-    } catch (err) {
+        if(document.getElementById("totalProducts"))
+            document.getElementById("totalProducts").innerText = data.products;
+
+        if(document.getElementById("totalUsers"))
+            document.getElementById("totalUsers").innerText = data.users;
+
+        if(document.getElementById("totalOrders"))
+            document.getElementById("totalOrders").innerText = data.orders;
+
+        if(document.getElementById("pendingOrders"))
+            document.getElementById("pendingOrders").innerText = data.pendingOrders;
+
+        if(document.getElementById("totalRevenue"))
+            document.getElementById("totalRevenue").innerText = "₹" + data.revenue;
+
+    }
+
+    catch(err){
 
         console.log(err);
 
