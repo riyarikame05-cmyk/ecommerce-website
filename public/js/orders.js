@@ -106,18 +106,17 @@ async function loadOrders() {
                     </div>
 
                 </div>
+${productsHTML}
 
-                ${productsHTML}
+<br>
 
-                <br>
+<button onclick="downloadInvoice('${order._id}')">
 
-                <button onclick="downloadInvoice('${order._id}')">
+    📄 Download Invoice
 
-                    📄 Download Invoice
+</button>
 
-                </button>
-
-            </div>
+</div>
 
             `;
 
