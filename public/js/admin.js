@@ -6,40 +6,26 @@ const currentUser = JSON.parse(localStorage.getItem("user"));
 // ================= SECURITY =================
 
 if (!token || !currentUser) {
-
     alert("Please login first!");
-
     window.location.href = "login.html";
-
 }
 
 if (currentUser.role !== "admin") {
-
     alert("Access Denied! Admin Only.");
-
     window.location.href = "dashboard.html";
-
 }
 
-// ================= LOAD DASHBOARD =================
+// ================= DASHBOARD =================
 
 async function loadDashboard() {
 
     try {
 
         const response = await fetch("/api/admin/dashboard", {
-
             headers: {
                 Authorization: `Bearer ${token}`
             }
-
         });
-
-        if (!response.ok) {
-
-            throw new Error("Unable to load dashboard");
-
-        }
 
         const data = await response.json();
 
@@ -49,9 +35,7 @@ async function loadDashboard() {
         document.getElementById("pendingOrders").innerText = data.pendingOrders;
         document.getElementById("totalRevenue").innerText = "₹" + data.revenue;
 
-    }
-
-    catch (err) {
+    } catch (err) {
 
         console.log(err);
 
@@ -66,12 +50,6 @@ async function loadProducts() {
     try {
 
         const response = await fetch(API);
-
-        if (!response.ok) {
-
-            throw new Error("Unable to load products");
-
-        }
 
         const products = await response.json();
 
@@ -96,15 +74,11 @@ async function loadProducts() {
                 <h2>₹${product.price}</h2>
 
                 <button onclick="editProduct('${encoded}')">
-
-                    Edit
-
+                    ✏ Edit
                 </button>
 
                 <button onclick="deleteProduct('${product._id}')">
-
-                    Delete
-
+                    🗑 Delete
                 </button>
 
             </div>
@@ -113,9 +87,7 @@ async function loadProducts() {
 
         });
 
-    }
-
-    catch (err) {
+    } catch (err) {
 
         console.log(err);
 
@@ -123,36 +95,50 @@ async function loadProducts() {
 
 }
 
-loadDashboard();
+// ================= EDIT PRODUCT =================
 
-loadProducts();
+function editProduct(encodedProduct) {
 
-// ================= UPDATE PRODUCT =================
+    const product = JSON.parse(decodeURIComponent(encodedProduct));
 
-async function updateProduct() {
+    document.getElementById("productId").value = product._id;
+    document.getElementById("editName").value = product.name;
+    document.getElementById("editPrice").value = product.price;
+    document.getElementById("editImage").value = product.image;
+    document.getElementById("editCategory").value = product.category;
+    document.getElementById("editDescription").value = product.description;
 
-    const id = document.getElementById("productId").value;
+    window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth"
+    });
 
-    const name = document.getElementById("editName").value.trim();
-    const price = document.getElementById("editPrice").value;
-    const image = document.getElementById("editImage").value.trim();
-    const category = document.getElementById("editCategory").value.trim();
-    const description = document.getElementById("editDescription").value.trim();
+}
 
-    if (!id) {
-        alert("Select a product first.");
+// ================= ADD PRODUCT =================
+
+async function addProduct() {
+
+    const name = document.getElementById("name").value.trim();
+    const price = document.getElementById("price").value;
+    const image = document.getElementById("image").value.trim();
+    const category = document.getElementById("category").value.trim();
+    const description = document.getElementById("description").value.trim();
+
+    if (!name || !price || !image || !category || !description) {
+        alert("Please fill all fields.");
         return;
     }
 
     try {
 
-        const response = await fetch(`${API}/${id}`, {
+        const response = await fetch(API, {
 
-            method: "PUT",
+            method: "POST",
 
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
+                Authorization: `Bearer ${token}`
             },
 
             body: JSON.stringify({
@@ -169,7 +155,68 @@ async function updateProduct() {
 
         alert(data.message);
 
+        document.getElementById("name").value = "";
+        document.getElementById("price").value = "";
+        document.getElementById("image").value = "";
+        document.getElementById("category").value = "";
+        document.getElementById("description").value = "";
+
         loadProducts();
+        loadDashboard();
+
+    } catch (err) {
+
+        console.log(err);
+
+    }
+
+}
+
+// ================= UPDATE PRODUCT =================
+
+async function updateProduct() {
+
+    const id = document.getElementById("productId").value;
+
+    if (!id) {
+        alert("Select a product first.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch(`${API}/${id}`, {
+
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+
+            body: JSON.stringify({
+
+                name: document.getElementById("editName").value,
+
+                price: document.getElementById("editPrice").value,
+
+                image: document.getElementById("editImage").value,
+
+                category: document.getElementById("editCategory").value,
+
+                description: document.getElementById("editDescription").value
+
+            })
+
+        });
+
+        const data = await response.json();
+
+        alert(data.message);
+
+        loadProducts();
+
+        loadDashboard();
 
     } catch (err) {
 
@@ -192,7 +239,7 @@ async function deleteProduct(id) {
             method: "DELETE",
 
             headers: {
-                "Authorization": `Bearer ${token}`
+                Authorization: `Bearer ${token}`
             }
 
         });
@@ -202,6 +249,8 @@ async function deleteProduct(id) {
         alert(data.message);
 
         loadProducts();
+
+        loadDashboard();
 
     } catch (err) {
 
@@ -221,3 +270,8 @@ function logout() {
     window.location.href = "login.html";
 
 }
+
+// ================= START =================
+
+loadDashboard();
+loadProducts();
