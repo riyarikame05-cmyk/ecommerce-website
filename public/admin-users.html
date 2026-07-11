@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Users</title>
+
+<link rel="stylesheet" href="css/admin-users.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>👥 User Management</h1>
+
+<div class="top">
+
+<button onclick="window.location='admin.html'">
+← Back
+</button>
+
+<input
+type="text"
+id="search"
+placeholder="Search User..."
+onkeyup="searchUsers()">
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+
+<th>Email</th>
+
+<th>Role</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="usersTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+<script src="js/admin-users.js"></script>
+
+</body>
+
+</html>
