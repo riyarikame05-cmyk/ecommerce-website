@@ -1,3 +1,4 @@
+
 console.log("HELLO RIYA");
 const API = "/api/products";
 
@@ -8,7 +9,8 @@ if (!token) {
 }
 
 let allProducts = [];
-
+let selectedCategory = "All";
+let selectedPrice = "";
 // ================= LOAD PRODUCTS =================
 
 async function loadProducts() {
@@ -140,6 +142,10 @@ function displayProducts(products) {
 
 function searchProducts() {
 
+    applyFilters();
+
+}
+
     const value = document
         .getElementById("search")
         .value
@@ -157,6 +163,12 @@ function searchProducts() {
 // ================= CATEGORY FILTER =================
 
 function filterCategory(category) {
+
+    selectedCategory = category;
+
+    applyFilters();
+
+}
 
     if (category === "All") {
 
@@ -258,6 +270,63 @@ async function addWishlist(productId) {
 
 }
 
+
+function applyFilters() {
+
+    const search = document
+        .getElementById("search")
+        .value
+        .toLowerCase()
+        .trim();
+
+    let filtered = [...allProducts];
+
+    // Search
+
+    if (search) {
+
+        filtered = filtered.filter(product =>
+            product.name.toLowerCase().includes(search)
+        );
+
+    }
+
+    // Category
+
+    if (selectedCategory !== "All") {
+
+        filtered = filtered.filter(product =>
+            product.category === selectedCategory
+        );
+
+    }
+
+    // Price
+
+    if (selectedPrice !== "") {
+
+        if (selectedPrice === "10000") {
+
+            filtered = filtered.filter(product =>
+                Number(product.price) > 10000
+            );
+
+        } else {
+
+            const [min, max] = selectedPrice.split("-").map(Number);
+
+            filtered = filtered.filter(product =>
+                Number(product.price) >= min &&
+                Number(product.price) <= max
+            );
+
+        }
+
+    }
+
+    displayProducts(filtered);
+
+}
 // ================= LOGOUT =================
 
 function logout() {
@@ -270,6 +339,45 @@ function logout() {
 
 }
 
+
+// ================= PRICE FILTER =================
+
+function filterByPrice() {
+
+    selectedPrice = document.getElementById("priceFilter").value;
+
+    applyFilters();
+
+}
+
+    const value = document.getElementById("priceFilter").value;
+
+    let filtered = allProducts;
+
+    if (value !== "") {
+
+        if (value === "10000") {
+
+            filtered = allProducts.filter(product =>
+                Number(product.price) > 10000
+            );
+
+        } else {
+
+            const [min, max] = value.split("-").map(Number);
+
+            filtered = allProducts.filter(product =>
+                Number(product.price) >= min &&
+                Number(product.price) <= max
+            );
+
+        }
+
+    }
+
+    displayProducts(filtered);
+
+}
 // ================= START =================
 
 loadProducts();

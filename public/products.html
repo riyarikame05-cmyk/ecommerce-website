@@ -63,7 +63,14 @@
     <div class="category-card" onclick="filterCategory('Watch')">⌚<h4>Watch</h4></div>
 
 </div>
-
+<select id="priceFilter" onchange="filterByPrice()">
+    <option value="">All Prices</option>
+    <option value="0-500">₹0 - ₹500</option>
+    <option value="500-1000">₹500 - ₹1000</option>
+    <option value="1000-5000">₹1000 - ₹5000</option>
+    <option value="5000-10000">₹5000 - ₹10000</option>
+    <option value="10000">Above ₹10000</option>
+</select>
 <!-- Products -->
 
 <div id="products" class="products-container"></div>
