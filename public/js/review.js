@@ -1,4 +1,11 @@
-const token = localStorage.getItem("token");
+function showLoader(){
+    document.getElementById("loader").classList.remove("hidden");
+}
+
+function hideLoader(){
+    document.getElementById("loader").classList.add("hidden");
+}const token = localStorage.getItem("token");
+
 const productId = new URLSearchParams(window.location.search).get("id");
 
 // ================= LOAD REVIEWS =================

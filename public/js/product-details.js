@@ -1,3 +1,11 @@
+function showLoader(){
+    document.getElementById("loader").classList.remove("hidden");
+}
+
+function hideLoader(){
+    document.getElementById("loader").classList.add("hidden");
+}
+
 const token = localStorage.getItem("token");
 
 if (!token) {

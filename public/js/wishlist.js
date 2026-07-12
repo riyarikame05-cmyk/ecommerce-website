@@ -1,4 +1,11 @@
-const API = "/api/wishlist";
+
+function showLoader(){
+    document.getElementById("loader").classList.remove("hidden");
+}
+
+function hideLoader(){
+    document.getElementById("loader").classList.add("hidden");
+}const API = "/api/wishlist";
 
 const token = localStorage.getItem("token");
 

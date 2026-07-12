@@ -1,3 +1,10 @@
+function showLoader(){
+    document.getElementById("loader").classList.remove("hidden");
+}
+
+function hideLoader(){
+    document.getElementById("loader").classList.add("hidden");
+}
 const API = "/api/auth";
 
 const form = document.getElementById("registerForm");
