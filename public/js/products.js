@@ -1,5 +1,5 @@
-
 console.log("HELLO RIYA");
+
 const API = "/api/products";
 
 const token = localStorage.getItem("token");
@@ -11,6 +11,7 @@ if (!token) {
 let allProducts = [];
 let selectedCategory = "All";
 let selectedPrice = "";
+
 // ================= LOAD PRODUCTS =================
 
 async function loadProducts() {
@@ -29,8 +30,6 @@ async function loadProducts() {
 
         allProducts = await response.json();
 
-        console.log("Products:", allProducts);
-
         displayProducts(allProducts);
 
     } catch (err) {
@@ -47,25 +46,15 @@ async function loadProducts() {
 
 }
 
-// ================= OPEN PRODUCT =================
-
-function openProduct(id) {
-
-    window.location.href = `product-details.html?id=${id}`;
-
-}
-
 // ================= DISPLAY PRODUCTS =================
 
 function displayProducts(products) {
 
     const container = document.getElementById("products");
 
-    if (!container) return;
-
     container.innerHTML = "";
 
-    if (!products || products.length === 0) {
+    if (!products.length) {
 
         container.innerHTML = `
             <h2 style="text-align:center;padding:40px;">
@@ -74,7 +63,6 @@ function displayProducts(products) {
         `;
 
         return;
-
     }
 
     products.forEach(product => {
@@ -85,7 +73,6 @@ function displayProducts(products) {
 
             <img
                 src="${product.image}"
-                alt="${product.name}"
                 class="product-image"
                 onclick="openProduct('${product._id}')">
 
@@ -96,37 +83,23 @@ function displayProducts(products) {
                 </h3>
 
                 <div class="rating">
-
                     ⭐ ${product.averageRating || 4.5}
-
                     (${product.totalReviews || 0} Reviews)
-
                 </div>
 
-                <p>
-
-                    ${product.description}
-
-                </p>
+                <p>${product.description}</p>
 
                 <div class="price">
-
                     ₹${product.price}
-
                 </div>
 
                 <button onclick="addToCart('${product._id}')">
-
                     🛒 Add To Cart
-
                 </button>
 
-                <button
-                    class="wishlist-btn"
+                <button class="wishlist-btn"
                     onclick="addWishlist('${product._id}')">
-
                     ❤️ Wishlist
-
                 </button>
 
             </div>
@@ -138,6 +111,15 @@ function displayProducts(products) {
     });
 
 }
+
+// ================= OPEN PRODUCT =================
+
+function openProduct(id) {
+
+    window.location.href = `product-details.html?id=${id}`;
+
+}
+
 // ================= SEARCH =================
 
 function searchProducts() {
@@ -146,21 +128,7 @@ function searchProducts() {
 
 }
 
-    const value = document
-        .getElementById("search")
-        .value
-        .toLowerCase()
-        .trim();
-
-    const filtered = allProducts.filter(product =>
-        product.name.toLowerCase().includes(value)
-    );
-
-    displayProducts(filtered);
-
-}
-
-// ================= CATEGORY FILTER =================
+// ================= CATEGORY =================
 
 function filterCategory(category) {
 
@@ -170,106 +138,17 @@ function filterCategory(category) {
 
 }
 
-    if (category === "All") {
+// ================= PRICE =================
 
-        displayProducts(allProducts);
+function filterByPrice() {
 
-        return;
+    selectedPrice = document.getElementById("priceFilter").value;
 
-    }
-
-    const filtered = allProducts.filter(product =>
-        product.category === category
-    );
-
-    displayProducts(filtered);
+    applyFilters();
 
 }
 
-// ================= ADD TO CART =================
-
-async function addToCart(productId) {
-
-    try {
-
-        const response = await fetch("/api/cart/add", {
-
-            method: "POST",
-
-            headers: {
-
-                "Content-Type": "application/json",
-
-                Authorization: `Bearer ${token}`
-
-            },
-
-            body: JSON.stringify({
-
-                productId
-
-            })
-
-        });
-
-        const data = await response.json();
-
-        alert(data.message);
-
-    }
-
-    catch (err) {
-
-        console.log(err);
-
-        alert("Unable to add product.");
-
-    }
-
-}
-
-// ================= ADD TO WISHLIST =================
-
-async function addWishlist(productId) {
-
-    try {
-
-        const response = await fetch("/api/wishlist", {
-
-            method: "POST",
-
-            headers: {
-
-                "Content-Type": "application/json",
-
-                Authorization: `Bearer ${token}`
-
-            },
-
-            body: JSON.stringify({
-
-                productId
-
-            })
-
-        });
-
-        const data = await response.json();
-
-        alert(data.message);
-
-    }
-
-    catch (err) {
-
-        console.log(err);
-
-        alert("Unable to add wishlist.");
-
-    }
-
-}
-
+// ================= APPLY FILTERS =================
 
 function applyFilters() {
 
@@ -311,7 +190,9 @@ function applyFilters() {
                 Number(product.price) > 10000
             );
 
-        } else {
+        }
+
+        else {
 
             const [min, max] = selectedPrice.split("-").map(Number);
 
@@ -327,57 +208,98 @@ function applyFilters() {
     displayProducts(filtered);
 
 }
+
+// ================= ADD TO CART =================
+
+async function addToCart(productId) {
+
+    try {
+
+        const response = await fetch("/api/cart/add", {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type": "application/json",
+
+                Authorization: `Bearer ${token}`
+
+            },
+
+            body: JSON.stringify({
+
+                productId
+
+            })
+
+        });
+
+        const data = await response.json();
+
+        alert(data.message);
+
+    }
+
+    catch (err) {
+
+        console.log(err);
+
+    }
+
+}
+
+// ================= WISHLIST =================
+
+async function addWishlist(productId) {
+
+    try {
+
+        const response = await fetch("/api/wishlist", {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type": "application/json",
+
+                Authorization: `Bearer ${token}`
+
+            },
+
+            body: JSON.stringify({
+
+                productId
+
+            })
+
+        });
+
+        const data = await response.json();
+
+        alert(data.message);
+
+    }
+
+    catch (err) {
+
+        console.log(err);
+
+    }
+
+}
+
 // ================= LOGOUT =================
 
 function logout() {
 
     localStorage.removeItem("token");
-
     localStorage.removeItem("user");
 
     window.location.href = "login.html";
 
 }
 
-
-// ================= PRICE FILTER =================
-
-function filterByPrice() {
-
-    selectedPrice = document.getElementById("priceFilter").value;
-
-    applyFilters();
-
-}
-
-    const value = document.getElementById("priceFilter").value;
-
-    let filtered = allProducts;
-
-    if (value !== "") {
-
-        if (value === "10000") {
-
-            filtered = allProducts.filter(product =>
-                Number(product.price) > 10000
-            );
-
-        } else {
-
-            const [min, max] = value.split("-").map(Number);
-
-            filtered = allProducts.filter(product =>
-                Number(product.price) >= min &&
-                Number(product.price) <= max
-            );
-
-        }
-
-    }
-
-    displayProducts(filtered);
-
-}
 // ================= START =================
 
 loadProducts();
