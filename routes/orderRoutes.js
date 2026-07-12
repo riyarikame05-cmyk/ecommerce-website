@@ -5,16 +5,19 @@ const auth = require("../middleware/authMiddleware");
 
 const orderController = require("../controllers/orderController");
 
-// Place Order
+// ================= PLACE ORDER =================
 router.post("/", auth, orderController.placeOrder);
 
-// Get My Orders
+// ================= MY ORDERS =================
 router.get("/", auth, orderController.getMyOrders);
 
-// Get All Orders (Admin)
+// ================= ADMIN ALL ORDERS =================
 router.get("/all", auth, orderController.getAllOrders);
 
-// Update Order Status
+// ================= DOWNLOAD INVOICE =================
+router.get("/invoice/:id", auth, orderController.downloadInvoice);
+
+// ================= UPDATE STATUS =================
 router.put("/:id", auth, orderController.updateOrderStatus);
 
 module.exports = router;

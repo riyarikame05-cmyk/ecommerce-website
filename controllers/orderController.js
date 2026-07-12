@@ -1,3 +1,4 @@
+const PDFDocument = require("pdfkit");
 const Order = require("../models/Order");
 const Cart = require("../models/Cart");
 
@@ -69,7 +70,8 @@ const getMyOrders = async (req, res) => {
 
         const orders = await Order.find({
             user: req.user.id
-        }).populate("items.product");
+        })
+        .populate("items.product");
 
         res.json(orders);
 
@@ -83,7 +85,7 @@ const getMyOrders = async (req, res) => {
 
 };
 
-// ================= GET ALL ORDERS (ADMIN) =================
+// ================= GET ALL ORDERS =================
 
 const getAllOrders = async (req, res) => {
 
@@ -148,9 +150,89 @@ const updateOrderStatus = async (req, res) => {
 
 };
 
+// ================= DOWNLOAD INVOICE =================
+
+const downloadInvoice = async (req, res) => {
+
+    try {
+
+        const order = await Order.findById(req.params.id)
+            .populate("user")
+            .populate("items.product");
+
+        if (!order) {
+
+            return res.status(404).json({
+                message: "Order not found"
+            });
+
+        }
+
+        const doc = new PDFDocument({ margin: 50 });
+
+        res.setHeader("Content-Type", "application/pdf");
+
+        res.setHeader(
+            "Content-Disposition",
+            `attachment; filename=Invoice-${order._id}.pdf`
+        );
+
+        doc.pipe(res);
+
+        doc.fontSize(24).text("ShopEase Invoice", {
+            align: "center"
+        });
+
+        doc.moveDown();
+
+        doc.fontSize(14).text(`Invoice ID : ${order._id}`);
+        doc.text(`Customer : ${order.user.name}`);
+        doc.text(`Email : ${order.user.email}`);
+        doc.text(`Date : ${new Date(order.createdAt).toLocaleDateString()}`);
+        doc.text(`Payment : ${order.paymentMethod}`);
+        doc.text(`Status : ${order.status}`);
+
+        doc.moveDown();
+
+        doc.fontSize(18).text("Products");
+
+        doc.moveDown();
+
+        order.items.forEach(item => {
+
+            doc.fontSize(12).text(
+`${item.product.name}
+Qty : ${item.quantity}
+Price : ₹${item.product.price}
+Subtotal : ₹${item.product.price * item.quantity}`
+            );
+
+            doc.moveDown();
+
+        });
+
+        doc.moveDown();
+
+        doc.fontSize(18).text(`Total : ₹${order.total}`, {
+            align: "right"
+        });
+
+        doc.end();
+
+    } catch (err) {
+
+        res.status(500).json({
+            message: err.message
+        });
+
+    }
+
+};
+
 module.exports = {
     placeOrder,
     getMyOrders,
     getAllOrders,
-    updateOrderStatus
+    updateOrderStatus,
+    downloadInvoice
 };
