@@ -21,11 +21,9 @@ body{
     align-items:center;
 }
 
-/* Login Box */
-
-.login-box{
+.register-box{
     width:100%;
-    max-width:400px;
+    max-width:450px;
     background:#fff;
     padding:45px;
     border-radius:20px;
@@ -34,18 +32,15 @@ body{
     animation:fadeIn .5s ease;
 }
 
-/* Heading */
-
-.login-box h1{
+.register-box h1{
     color:#1565c0;
-    margin-bottom:10px;
-    font-size:36px;
+    margin-bottom:8px;
+    font-size:34px;
 }
 
-.login-box h2{
+.register-box h2{
     color:#222;
     margin-bottom:8px;
-    font-size:28px;
 }
 
 .subtitle{
@@ -54,31 +49,33 @@ body{
     font-size:15px;
 }
 
-/* Inputs */
-
-input{
+input,
+select{
     width:100%;
     padding:15px;
     margin:12px 0;
     border:1px solid #ddd;
     border-radius:10px;
     font-size:16px;
-    transition:.3s;
     background:#fafafa;
+    transition:.3s;
 }
 
-input:focus{
+input:focus,
+select:focus{
+    outline:none;
     background:#fff;
     border-color:#1565c0;
     box-shadow:0 0 12px rgba(21,101,192,.2);
-    outline:none;
 }
 
 input::placeholder{
     color:#999;
 }
 
-/* Button */
+select{
+    cursor:pointer;
+}
 
 button{
     width:100%;
@@ -104,16 +101,15 @@ button:active{
     transform:scale(.98);
 }
 
-/* Bottom */
-
 .bottom{
     margin-top:22px;
     color:#666;
+    font-size:15px;
 }
 
 .bottom a{
-    text-decoration:none;
     color:#1565c0;
+    text-decoration:none;
     font-weight:bold;
 }
 
@@ -121,55 +117,71 @@ button:active{
     text-decoration:underline;
 }
 
-/* Mobile */
+/* Optional password strength message */
+
+.message{
+    margin-top:8px;
+    font-size:14px;
+    color:#666;
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+    .register-box{
+        padding:35px;
+    }
+
+    .register-box h1{
+        font-size:30px;
+    }
+
+}
 
 @media(max-width:500px){
 
-body{
-    padding:15px;
-}
+    body{
+        padding:15px;
+    }
 
-.login-box{
-    width:100%;
-    padding:25px;
-}
+    .register-box{
+        width:100%;
+        padding:25px;
+        border-radius:15px;
+    }
 
-.login-box h1{
-    font-size:30px;
-}
+    .register-box h1{
+        font-size:28px;
+    }
 
-.login-box h2{
-    font-size:22px;
-}
+    .register-box h2{
+        font-size:22px;
+    }
 
-.subtitle{
-    font-size:14px;
-}
+    input,
+    select{
+        padding:13px;
+        font-size:15px;
+    }
 
-input{
-    padding:13px;
-    font-size:15px;
-}
-
-button{
-    padding:13px;
-    font-size:16px;
-}
+    button{
+        padding:13px;
+        font-size:16px;
+    }
 
 }
-
-/* Animation */
 
 @keyframes fadeIn{
 
-from{
-    opacity:0;
-    transform:translateY(20px);
-}
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
 
-to{
-    opacity:1;
-    transform:translateY(0);
-}
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
 
 }

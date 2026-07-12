@@ -212,3 +212,89 @@ border-radius:8px;
 cursor:pointer;
 
 }
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width:768px){
+
+.navbar{
+    flex-direction:column;
+    gap:15px;
+    text-align:center;
+    padding:20px;
+}
+
+.navbar h2{
+    font-size:22px;
+}
+
+.navbar button{
+    width:100%;
+}
+
+.orders-container{
+    padding:15px;
+}
+
+.order-card{
+    padding:18px;
+}
+
+.order-header{
+    flex-direction:column;
+    gap:15px;
+}
+
+.product{
+    flex-direction:column;
+    text-align:center;
+}
+
+.product img{
+    width:100px;
+    height:100px;
+}
+
+.product-details h3{
+    font-size:18px;
+}
+
+.status{
+    width:100%;
+    text-align:center;
+}
+
+.empty button{
+    width:100%;
+}
+
+}
+
+@media (max-width:480px){
+
+.navbar{
+    padding:15px;
+}
+
+.navbar h2{
+    font-size:20px;
+}
+
+.product img{
+    width:80px;
+    height:80px;
+}
+
+.product-details h3{
+    font-size:16px;
+}
+
+.product-details p{
+    font-size:14px;
+}
+
+.order-card{
+    padding:15px;
+}
+
+}

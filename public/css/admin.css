@@ -152,3 +152,104 @@ background:#d32f2f;
 .card button:last-child:hover{
 background:#b71c1c;
 }
+/* ================= BETTER MOBILE RESPONSIVE ================= */
+
+@media (max-width:768px){
+
+.navbar{
+    padding:15px;
+}
+
+.logo{
+    font-size:24px;
+}
+
+.navbar button{
+    width:100%;
+}
+
+.cart-container{
+    width:100%;
+    padding:15px;
+    margin:10px auto;
+}
+
+.card{
+    padding:15px;
+    gap:15px;
+}
+
+.product-image{
+    width:160px;
+    height:160px;
+}
+
+.details h3{
+    font-size:20px;
+}
+
+.details p{
+    font-size:14px;
+}
+
+.details h2{
+    font-size:24px;
+}
+
+.quantity{
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.quantity button{
+    width:38px;
+    height:38px;
+}
+
+.remove-btn{
+    width:100%;
+    margin-top:10px;
+}
+
+.summary{
+    padding:20px;
+}
+
+.summary h2{
+    font-size:28px;
+}
+
+.checkout-btn{
+    width:100%;
+}
+
+}
+
+@media (max-width:480px){
+
+.product-image{
+    width:130px;
+    height:130px;
+}
+
+.details h3{
+    font-size:18px;
+}
+
+.details h2{
+    font-size:22px;
+}
+
+.quantity span{
+    font-size:18px;
+}
+
+.summary h2{
+    font-size:24px;
+}
+
+.checkout-btn{
+    font-size:16px;
+}
+
+}
