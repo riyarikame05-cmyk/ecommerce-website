@@ -1,5 +1,4 @@
 const token = localStorage.getItem("token");
-
 const productId = new URLSearchParams(window.location.search).get("id");
 
 // ================= LOAD REVIEWS =================
@@ -9,17 +8,15 @@ async function loadReviews() {
     try {
 
         const response = await fetch(`/api/reviews/${productId}`);
-
         const reviews = await response.json();
 
         const container = document.getElementById("reviews");
 
         container.innerHTML = "";
 
-        if (!reviews || reviews.length === 0) {
+        if (!reviews.length) {
 
             container.innerHTML = "<p>No reviews yet.</p>";
-
             return;
 
         }
@@ -42,9 +39,11 @@ async function loadReviews() {
 
         });
 
-    } catch (err) {
+    }
 
-        console.error("Load Reviews Error:", err);
+    catch (err) {
+
+        console.log(err);
 
     }
 
@@ -56,7 +55,7 @@ async function addReview() {
 
     if (!token) {
 
-        alert("Please login first.");
+        alert("Please Login First");
 
         window.location.href = "login.html";
 
@@ -70,7 +69,7 @@ async function addReview() {
 
     if (comment === "") {
 
-        alert("Please write your review.");
+        alert("Please enter review");
 
         return;
 
@@ -86,16 +85,14 @@ async function addReview() {
 
                 "Content-Type": "application/json",
 
-                "Authorization": `Bearer ${token}`
+                Authorization: `Bearer ${token}`
 
             },
 
             body: JSON.stringify({
 
                 productId,
-
                 rating,
-
                 comment
 
             })
@@ -110,16 +107,28 @@ async function addReview() {
 
         loadReviews();
 
-    } catch (err) {
+    }
 
-        console.error("Add Review Error:", err);
+    catch (err) {
+
+        console.log(err);
 
     }
 
 }
 
-// Make function available to HTML onclick
-window.addReview = addReview;
+// ================= BUTTON EVENT =================
 
-// Load reviews when page opens
-loadReviews();
+document.addEventListener("DOMContentLoaded", () => {
+
+    loadReviews();
+
+    const btn = document.getElementById("reviewBtn");
+
+    if (btn) {
+
+        btn.addEventListener("click", addReview);
+
+    }
+
+});
