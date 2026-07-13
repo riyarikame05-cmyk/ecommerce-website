@@ -1,10 +1,4 @@
-function showLoader(){
-    document.getElementById("loader").classList.remove("hidden");
-}
-
-function hideLoader(){
-    document.getElementById("loader").classList.add("hidden");
-}const token = localStorage.getItem("token");
+const token = localStorage.getItem("token");
 
 const productId = new URLSearchParams(window.location.search).get("id");
 
@@ -24,9 +18,7 @@ async function loadReviews() {
 
         if (!reviews || reviews.length === 0) {
 
-            container.innerHTML = `
-                <p>No reviews yet.</p>
-            `;
+            container.innerHTML = "<p>No reviews yet.</p>";
 
             return;
 
@@ -38,7 +30,7 @@ async function loadReviews() {
 
                 <div class="card">
 
-                    <h3>${review.user.name}</h3>
+                    <h3>${review.user?.name || "User"}</h3>
 
                     <p>⭐ ${review.rating}/5</p>
 
@@ -52,7 +44,7 @@ async function loadReviews() {
 
     } catch (err) {
 
-        console.log(err);
+        console.error("Load Reviews Error:", err);
 
     }
 
@@ -62,13 +54,23 @@ async function loadReviews() {
 
 async function addReview() {
 
+    if (!token) {
+
+        alert("Please login first.");
+
+        window.location.href = "login.html";
+
+        return;
+
+    }
+
     const rating = document.getElementById("rating").value;
 
     const comment = document.getElementById("comment").value.trim();
 
-    if (!comment) {
+    if (comment === "") {
 
-        alert("Please write a review.");
+        alert("Please write your review.");
 
         return;
 
@@ -110,12 +112,14 @@ async function addReview() {
 
     } catch (err) {
 
-        console.log(err);
+        console.error("Add Review Error:", err);
 
     }
 
 }
 
+// Make function available to HTML onclick
 window.addReview = addReview;
 
+// Load reviews when page opens
 loadReviews();

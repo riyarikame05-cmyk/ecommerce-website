@@ -1,24 +1,41 @@
 const Review = require("../models/Review");
 
-// Add Review
 const addReview = async (req, res) => {
 
     try {
 
+        console.log("USER:", req.user);
+        console.log("BODY:", req.body);
+
+        if (!req.body.productId) {
+            return res.status(400).json({
+                message: "Product ID missing"
+            });
+        }
+
         const review = new Review({
+
             user: req.user.id,
+
             product: req.body.productId,
-            rating: req.body.rating,
+
+            rating: Number(req.body.rating),
+
             comment: req.body.comment
+
         });
 
         await review.save();
 
-        res.json({
+        console.log("Review Saved Successfully");
+
+        res.status(201).json({
             message: "Review Added Successfully ✅"
         });
 
     } catch (err) {
+
+        console.log("ERROR:", err);
 
         res.status(500).json({
             message: err.message
@@ -28,7 +45,6 @@ const addReview = async (req, res) => {
 
 };
 
-// Get Product Reviews
 const getReviews = async (req, res) => {
 
     try {
