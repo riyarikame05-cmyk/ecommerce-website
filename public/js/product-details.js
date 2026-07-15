@@ -1,10 +1,12 @@
-function showLoader(){
+function showLoader() {
     document.getElementById("loader").classList.remove("hidden");
 }
 
-function hideLoader(){
+function hideLoader() {
     document.getElementById("loader").classList.add("hidden");
 }
+
+// ================= AUTH =================
 
 const token = localStorage.getItem("token");
 
@@ -15,7 +17,7 @@ if (!token) {
 const params = new URLSearchParams(window.location.search);
 const productId = params.get("id");
 
-// Make available for reviews.js
+// Share with review.js
 window.token = token;
 window.productId = productId;
 
@@ -24,6 +26,8 @@ window.productId = productId;
 async function loadProduct() {
 
     try {
+
+        showLoader();
 
         const response = await fetch("/api/products");
 
@@ -43,21 +47,18 @@ async function loadProduct() {
                 </h2>
             `;
 
+            hideLoader();
             return;
-
         }
 
         document.getElementById("productDetails").innerHTML = `
-
         <div class="product-container">
 
             <div class="left">
-
                 <img
                     src="${product.image}"
                     class="big-image"
                     alt="${product.name}">
-
             </div>
 
             <div class="right">
@@ -105,23 +106,24 @@ async function loadProduct() {
             </div>
 
         </div>
-
         `;
+
+        hideLoader();
 
     }
 
     catch (err) {
 
-        console.log(err);
+        console.error(err);
+
+        hideLoader();
 
         document.getElementById("productDetails").innerHTML = `
             <h2 style="text-align:center;color:red;">
                 Failed to Load Product
             </h2>
         `;
-
     }
-
 }
 
 // ================= ADD TO CART =================
@@ -135,17 +137,12 @@ async function addToCart(productId) {
             method: "POST",
 
             headers: {
-
                 "Content-Type": "application/json",
-
                 Authorization: `Bearer ${token}`
-
             },
 
             body: JSON.stringify({
-
                 productId
-
             })
 
         });
@@ -158,7 +155,7 @@ async function addToCart(productId) {
 
     catch (err) {
 
-        console.log(err);
+        console.error(err);
 
         alert("Unable to add product.");
 
@@ -177,17 +174,12 @@ async function addWishlist(productId) {
             method: "POST",
 
             headers: {
-
                 "Content-Type": "application/json",
-
                 Authorization: `Bearer ${token}`
-
             },
 
             body: JSON.stringify({
-
                 productId
-
             })
 
         });
@@ -200,7 +192,7 @@ async function addWishlist(productId) {
 
     catch (err) {
 
-        console.log(err);
+        console.error(err);
 
         alert("Unable to add wishlist.");
 
