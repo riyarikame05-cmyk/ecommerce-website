@@ -102,10 +102,9 @@ async function addReview() {
         const data = await response.json();
 
         alert(data.message);
-
+await loadReviews();
         document.getElementById("comment").value = "";
 
-        loadReviews();
 
     }
 
@@ -129,6 +128,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         btn.addEventListener("click", addReview);
 
+    }
+
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    loadReviews();
+
+    const btn = document.getElementById("reviewBtn");
+
+    if (btn) {
+        btn.addEventListener("click", addReview);
     }
 
 });
