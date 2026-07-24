@@ -1,9 +1,11 @@
 function showLoader() {
-    document.getElementById("loader").classList.remove("hidden");
+    const loader = document.getElementById("loader");
+    if (loader) loader.classList.remove("hidden");
 }
 
 function hideLoader() {
-    document.getElementById("loader").classList.add("hidden");
+    const loader = document.getElementById("loader");
+    if (loader) loader.classList.add("hidden");
 }
 
 // ================= AUTH =================
@@ -138,11 +140,11 @@ async function addToCart(productId) {
 
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${window.token}`
             },
 
             body: JSON.stringify({
-                productId
+                productId: productId
             })
 
         });
@@ -162,7 +164,6 @@ async function addToCart(productId) {
     }
 
 }
-
 // ================= ADD TO WISHLIST =================
 
 async function addWishlist(productId) {
@@ -174,12 +175,17 @@ async function addWishlist(productId) {
             method: "POST",
 
             headers: {
+
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
+
+                Authorization: `Bearer ${window.token}`
+
             },
 
             body: JSON.stringify({
+
                 productId
+
             })
 
         });

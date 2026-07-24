@@ -1,16 +1,14 @@
 // ================= REVIEW.JS =================
 
-// Get values from product-details.js
-const token = window.token;
-const productId = window.productId;
+window.token = localStorage.getItem("token");
+window.productId = new URLSearchParams(window.location.search).get("id");
 
 // ================= LOAD REVIEWS =================
 
 async function loadReviews() {
-
     try {
 
-        const response = await fetch(`/api/reviews/${productId}`);
+        const response = await fetch(`/api/reviews/${window.productId}`);
         const reviews = await response.json();
 
         const container = document.getElementById("reviews");
@@ -34,16 +32,15 @@ async function loadReviews() {
         });
 
     } catch (err) {
-        console.error("Load Reviews Error:", err);
+        console.error(err);
     }
-
 }
 
 // ================= ADD REVIEW =================
 
 async function addReview() {
 
-    if (!token) {
+    if (!window.token) {
         alert("Please login first.");
         window.location.href = "login.html";
         return;
@@ -65,11 +62,11 @@ async function addReview() {
 
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
+                "Authorization": `Bearer ${window.token}`
             },
 
             body: JSON.stringify({
-                productId,
+                productId: window.productId,
                 rating,
                 comment
             })
@@ -85,24 +82,22 @@ async function addReview() {
         loadReviews();
 
     } catch (err) {
-        console.error("Add Review Error:", err);
+        console.error(err);
     }
-
 }
 
-// Make function available globally
+// Global function
 window.addReview = addReview;
 
-// ================= START =================
-
-document.addEventListener("DOMContentLoaded", () => {
+// Start
+window.addEventListener("load", () => {
 
     loadReviews();
 
     const btn = document.getElementById("reviewBtn");
 
     if (btn) {
-        btn.addEventListener("click", addReview);
+        btn.onclick = addReview;
     }
 
 });
