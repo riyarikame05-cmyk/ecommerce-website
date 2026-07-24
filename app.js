@@ -1,6 +1,4 @@
-app.use("/api/orders", require("./routes/orderRoutes"));
-app.use("/api/reviews", require("./routes/reviewRoutes"));
-app.use("/api/invoice", require("./routes/invoiceRoutes")); // ✅const express = require("express");
+const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const path = require("path");
@@ -32,33 +30,42 @@ app.use("/api/wishlist", require("./routes/wishlistRoutes"));
 app.use("/api/admin", require("./routes/adminRoutes"));
 app.use("/api/payment", require("./routes/paymentRoutes"));
 
+// If you really have this route, keep it.
+// Otherwise remove these two lines.
+app.use("/api/invoice", require("./routes/invoiceRoutes"));
+
 // ===========================
 // Home Page
 // ===========================
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "register.html"));
 });
-
 // ===========================
 // MongoDB Connection
 // ===========================
-if (mongoose.connection.readyState === 0) {
-    mongoose
-        .connect(process.env.MONGO_URI)
-        .then(async () => {
-            console.log("MongoDB Connected ✅");
+let isConnected = false;
 
-            const Product = require("./models/Product");
+async function connectDB() {
+    if (isConnected) return;
 
-            console.log(
-                "Products:",
-                await Product.countDocuments()
-            );
-        })
-        .catch((err) => console.log(err));
+    try {
+        await mongoose.connect(process.env.MONGO_URI, {
+            serverSelectionTimeoutMS: 30000
+        });
+
+        isConnected = true;
+        console.log("MongoDB Connected ✅");
+
+        const Product = require("./models/Product");
+        console.log("Products:", await Product.countDocuments());
+
+    } catch (err) {
+        console.error("MongoDB Error:", err);
+    }
 }
 
+connectDB();
 // ===========================
-// Export App
+// Export Express App
 // ===========================
 module.exports = app;
